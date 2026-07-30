@@ -17,11 +17,30 @@ const ALLOWED_TYPES: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
   "image/heic": "heic",
+  "image/heif": "heif",
   "image/gif": "gif",
   "video/mp4": "mp4",
   "video/quicktime": "mov",
   "video/webm": "webm",
 };
+
+// Telegram Bot API вміє показувати як фото/відео лише ці формати — усе інше
+// (наприклад, HEIC/HEIF з iPhone або .mov) треба слати як звичайний файл
+// через sendDocument, інакше Telegram відповідає помилкою (IMAGE_PROCESS_FAILED)
+// і фото з айфонів просто не доходять.
+const TELEGRAM_PHOTO_SAFE = new Set(["image/jpeg", "image/png", "image/webp"]);
+const TELEGRAM_VIDEO_SAFE = new Set(["video/mp4"]);
+
+function resolveTelegramTarget(mime: string): { method: string; field: string } {
+  if (mime.startsWith("image/")) {
+    return TELEGRAM_PHOTO_SAFE.has(mime)
+      ? { method: "sendPhoto", field: "photo" }
+      : { method: "sendDocument", field: "document" };
+  }
+  return TELEGRAM_VIDEO_SAFE.has(mime)
+    ? { method: "sendVideo", field: "video" }
+    : { method: "sendDocument", field: "document" };
+}
 
 async function saveLocalCopy(file: File, ext: string) {
   try {
@@ -36,8 +55,7 @@ async function saveLocalCopy(file: File, ext: string) {
 
 async function sendToTelegram(file: File, token: string, chatId: string) {
   const isVideo = file.type.startsWith("video/");
-  const method = isVideo ? "sendVideo" : "sendPhoto";
-  const field = isVideo ? "video" : "photo";
+  const { method, field } = resolveTelegramTarget(file.type);
   const caption = isVideo ? "Відео з сайту весілля 🎥" : "Фото з сайту весілля 💌";
 
   const tgForm = new FormData();
