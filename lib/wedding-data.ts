@@ -95,7 +95,7 @@ export const stay = {
 // Розсадка ще не готова — покажемо заглушку замість плану.
 // Коли розподілите гостей по столах, поставте true, і на сайті
 // з'явиться інтерактивний план з даними з `tables` нижче.
-export const seatingPlanReady = true;
+export const seatingPlanReady = false;
 export const seatingComingSoonText = "З'явиться тут трохи ближче до весілля 🙂";
 
 const socialPlaceholder = "https://instagram.com";
