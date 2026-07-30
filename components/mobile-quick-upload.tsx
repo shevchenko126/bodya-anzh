@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { friendlyErrorMessage, sanitizeFile } from "@/lib/upload-utils";
 import { Toast } from "./toast";
 
 type Status = "idle" | "uploading" | "success" | "error";
@@ -26,7 +27,7 @@ export function MobileQuickUpload() {
     setMessage(null);
 
     const formData = new FormData();
-    Array.from(fileList).forEach((file) => formData.append("photos", file));
+    Array.from(fileList).forEach((file) => formData.append("photos", sanitizeFile(file)));
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
@@ -34,7 +35,7 @@ export function MobileQuickUpload() {
       if (!res.ok) throw new Error(data.error ?? "Не вдалося надіслати фото");
       showMessage("Дякуємо! Фото надіслано.", "success");
     } catch (err) {
-      showMessage(err instanceof Error ? err.message : "Щось пішло не так", "error");
+      showMessage(friendlyErrorMessage(err, "Не вдалося надіслати фото. Спробуйте ще раз."), "error");
     }
   }
 

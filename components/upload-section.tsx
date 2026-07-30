@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { friendlyErrorMessage, sanitizeFile } from "@/lib/upload-utils";
 import { photoShare } from "@/lib/wedding-data";
 import { SectionHeading } from "./section-heading";
 import { Toast } from "./toast";
@@ -71,7 +72,7 @@ export function UploadSection() {
     setMessage(null);
 
     const formData = new FormData();
-    pending.forEach((p) => formData.append("photos", p.file));
+    pending.forEach((p) => formData.append("photos", sanitizeFile(p.file)));
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
@@ -82,7 +83,7 @@ export function UploadSection() {
       setPending([]);
       showMessage("Дякуємо! Надіслано.", "success");
     } catch (err) {
-      showMessage(err instanceof Error ? err.message : "Щось пішло не так", "error");
+      showMessage(friendlyErrorMessage(err, "Не вдалося надіслати файли. Спробуйте ще раз."), "error");
     }
   }
 
