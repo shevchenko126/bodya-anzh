@@ -5,13 +5,21 @@ import { photoShare } from "@/lib/wedding-data";
 import { SectionHeading } from "./section-heading";
 import { Toast } from "./toast";
 
+type FileKind = "image" | "video" | "other";
+
 interface PendingFile {
   file: File;
   previewUrl: string;
-  isVideo: boolean;
+  kind: FileKind;
 }
 
 type Status = "idle" | "uploading" | "success" | "error";
+
+function kindOf(file: File): FileKind {
+  if (file.type.startsWith("image/")) return "image";
+  if (file.type.startsWith("video/")) return "video";
+  return "other";
+}
 
 export function UploadSection() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,14 +36,11 @@ export function UploadSection() {
   }, []);
 
   function addFiles(fileList: FileList | null) {
-    if (!fileList) return;
-    const media = Array.from(fileList).filter(
-      (f) => f.type.startsWith("image/") || f.type.startsWith("video/"),
-    );
-    const next = media.map((file) => ({
+    if (!fileList || fileList.length === 0) return;
+    const next = Array.from(fileList).map((file) => ({
       file,
       previewUrl: URL.createObjectURL(file),
-      isVideo: file.type.startsWith("video/"),
+      kind: kindOf(file),
     }));
     setStatus("idle");
     setMessage(null);
@@ -111,15 +116,15 @@ export function UploadSection() {
             : "border-line bg-white/40 hover:border-accent/60 hover:bg-accent-soft/10"
         }`}
       >
-        <span className="text-4xl">📷</span>
-        <p className="font-serif text-lg text-foreground sm:text-xl">
-          Перетягніть фото чи відео сюди
+        <span className="text-4xl">📎</span>
+        <p className="font-serif text-lg text-foreground sm:text-xl">Перетягніть файли сюди</p>
+        <p className="text-sm text-foreground/60">
+          фото, відео чи будь-що інше — або натисніть, щоб вибрати
         </p>
-        <p className="text-sm text-foreground/60">або натисніть, щоб вибрати файли</p>
         <input
           ref={inputRef}
           type="file"
-          accept="image/*,video/*"
+          accept="*/*"
           multiple
           className="hidden"
           onChange={(e) => addFiles(e.target.files)}
@@ -130,11 +135,18 @@ export function UploadSection() {
         <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
           {pending.map((p, i) => (
             <div key={p.previewUrl} className="group relative aspect-square overflow-hidden rounded-xl bg-black/5">
-              {p.isVideo ? (
+              {p.kind === "video" ? (
                 <video src={p.previewUrl} className="h-full w-full object-cover" muted playsInline />
-              ) : (
+              ) : p.kind === "image" ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.previewUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-1 px-2 text-center">
+                  <span className="text-2xl">📄</span>
+                  <span className="w-full truncate text-[11px] text-foreground/70">
+                    {p.file.name}
+                  </span>
+                </div>
               )}
               <button
                 type="button"
