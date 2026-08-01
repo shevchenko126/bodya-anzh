@@ -17,7 +17,7 @@ export function HeroSection() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center gap-5 px-6 pb-16 text-center text-white sm:pb-24">
         <span className="text-xs font-semibold tracking-[0.4em] uppercase text-white/80">
-          Запрошуэмо на весілля
+          Запрошуємо на весілля
         </span>
         <h1 className="font-serif text-5xl leading-tight sm:text-7xl">
           {couple.groomName} <span className="text-white/70">&</span> {couple.brideName}

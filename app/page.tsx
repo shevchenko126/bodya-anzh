@@ -9,7 +9,7 @@ import { StaySection } from "@/components/stay-section";
 import { ThanksSection } from "@/components/thanks-section";
 import { UploadSection } from "@/components/upload-section";
 import { WhenWhereSection } from "@/components/when-where-section";
-import { galleryPart1, galleryPart2 } from "@/lib/wedding-data";
+import { galleryPart2 } from "@/lib/wedding-data";
 
 export default function Home() {
   return (
@@ -18,13 +18,14 @@ export default function Home() {
       <main className="flex flex-1 flex-col">
         <HeroSection />
         <InfoSection />
-        <GallerySection id="gallery-1" photos={galleryPart1} />
+        {/* <GallerySection id="gallery-1" photos={galleryPart1} /> */}
         <WhenWhereSection />
         <StaySection />
+
+        <GoodToKnowSection />
         <SeatingSection />
         <GallerySection id="gallery-2" photos={galleryPart2} />
         <UploadSection />
-        <GoodToKnowSection />
         <ThanksSection />
       </main>
       <MobileQuickUpload />

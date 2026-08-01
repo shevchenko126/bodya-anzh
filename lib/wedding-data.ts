@@ -17,7 +17,6 @@ export const couple = {
 };
 
 export const info = {
-  heading: "Ласкаво просимо",
   paragraphs: [
     "Ми дуже раді, що ви будете поруч з нами в цей день ❤️",
     "Щоб нічого не загубилося, зібрали тут усю важливу інформацію. Якщо щось зміниться — просто оновимо цю сторінку.",
@@ -27,6 +26,11 @@ export const info = {
 export const whenWhere = {
   eyebrow: "Коли і де",
   heading: "15–16 серпня 2026 · Bosohouses",
+  venue: {
+    name: "Bosohouses",
+    instagram: "https://www.instagram.com/bosohouses?igsh=OGRvM3BnOTdmdHlr",
+    mapsUrl: "https://maps.app.goo.gl/Zhkc1T2PRMB1hHPg9?g_st=ic",
+  },
   day1: {
     label: "15 серпня — День весілля",
     timeline: [

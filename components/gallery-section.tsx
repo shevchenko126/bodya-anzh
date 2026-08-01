@@ -11,15 +11,9 @@ interface GallerySectionProps {
   id: string;
   photos: GalleryPhoto[];
   eyebrow?: string;
-  title?: string;
 }
 
-export function GallerySection({
-  id,
-  photos,
-  eyebrow = "Наші миті",
-  title = "Фотогалерея",
-}: GallerySectionProps) {
+export function GallerySection({ id, photos, eyebrow = "Наші миті" }: GallerySectionProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -79,7 +73,7 @@ export function GallerySection({
 
   return (
     <section id={id} className="w-full py-10 sm:py-14">
-      <SectionHeading eyebrow={eyebrow} title={title} className="mb-10 px-6" />
+      <SectionHeading eyebrow={eyebrow} className="mb-10 px-6" />
 
       <div className="relative mx-auto max-w-5xl px-6">
         <div

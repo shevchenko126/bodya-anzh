@@ -9,7 +9,7 @@ export async function GoodToKnowSection() {
 
   return (
     <section id="good-to-know" className="mx-auto w-full max-w-2xl px-6 py-10 sm:py-14">
-      <SectionHeading eyebrow={goodToKnow.eyebrow} title="Корисно знати" className="mb-14" />
+      <SectionHeading eyebrow={goodToKnow.eyebrow} className="mb-14" />
 
       <div className="mb-12">
         <h3 className="mb-4 font-serif text-2xl text-foreground">{packing.heading}</h3>
