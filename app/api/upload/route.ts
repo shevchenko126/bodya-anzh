@@ -1,15 +1,11 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 
 // ---------------------------------------------------------------------------
 // Приймає будь-які файли від гостей і пересилає їх ботом у весільний Telegram-чат.
-// Додатково зберігає копію в /public/uploads (best-effort — на serverless-
-// платформах файлова система лише для читання, тому запис туди може не
-// спрацювати, і це не повинно ламати основну відправку в Telegram).
+// Файли не зберігаються на сервері — існують лише в пам'яті на час запиту
+// і йдуть напряму в Telegram, Telegram лишається єдиним місцем зберігання.
 // ---------------------------------------------------------------------------
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 МБ — ліміт Telegram Bot API на файл
 
 // Telegram Bot API вміє показувати як фото/відео лише ці формати — усе інше
@@ -29,18 +25,6 @@ function captionFor(mime: string) {
   if (mime.startsWith("image/")) return "Фото з сайту весілля 💌";
   if (mime.startsWith("video/")) return "Відео з сайту весілля 🎥";
   return "Файл з сайту весілля 📎";
-}
-
-async function saveLocalCopy(file: File) {
-  try {
-    await mkdir(UPLOAD_DIR, { recursive: true });
-    const ext = file.name.includes(".") ? file.name.split(".").pop() : "bin";
-    const filename = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(UPLOAD_DIR, filename), buffer);
-  } catch {
-    // Файлова система лише для читання (serverless) — це нормально, Telegram лишається основним каналом.
-  }
 }
 
 async function sendToTelegram(file: File, token: string, chatId: string) {
@@ -103,7 +87,6 @@ export async function POST(request: NextRequest) {
         { status: 502 },
       );
     }
-    await saveLocalCopy(file);
   }
 
   return NextResponse.json({ ok: true, count: files.length });
