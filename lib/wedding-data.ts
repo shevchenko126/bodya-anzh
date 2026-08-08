@@ -124,16 +124,10 @@ export const tables: WeddingTable[] = [
 
 const GALLERY_PHOTO_COUNT = 24;
 
-const gallery: GalleryPhoto[] = Array.from({ length: GALLERY_PHOTO_COUNT }, (_, i) => ({
+export const gallery: GalleryPhoto[] = Array.from({ length: GALLERY_PHOTO_COUNT }, (_, i) => ({
   src: `/uploads/photo-${i + 1}.jpeg`,
   alt: `Фото ${i + 1}`,
 }));
-
-// Розбиваємо галерею на два блоки: перший показуємо одразу після вітання,
-// другий — перед формою для гостьових фото.
-const GALLERY_SPLIT = Math.ceil(gallery.length / 2);
-export const galleryPart1: GalleryPhoto[] = gallery.slice(0, GALLERY_SPLIT);
-export const galleryPart2: GalleryPhoto[] = gallery.slice(GALLERY_SPLIT);
 
 export const photoShare = {
   eyebrow: "Після весілля",
